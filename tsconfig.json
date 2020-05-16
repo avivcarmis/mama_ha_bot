@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "outDir": "./dist",
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "strict": true,
+    "target": "es5",
+    "sourceMap": true,
+    "inlineSources": true
+  },
+  "include": ["./src/**/*"]
+}

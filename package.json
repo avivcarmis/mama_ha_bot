@@ -1,0 +1,21 @@
+{
+  "name": "mama_ha_bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf dist",
+    "compile": "tsc",
+    "start": "npm run clean && npm run compile && node dist/index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "node-telegram-bot-api": "^0.50.0"
+  },
+  "devDependencies": {
+    "@types/es6-promise": "^3.3.0",
+    "@types/node": "^14.0.1",
+    "@types/node-telegram-bot-api": "^0.40.3"
+  }
+}
