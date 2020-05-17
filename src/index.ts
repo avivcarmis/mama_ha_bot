@@ -1,5 +1,5 @@
 import * as TelegramBot from 'node-telegram-bot-api';
-import {greetNewMembers} from "./new_members";
+import {greetNewMembers} from "./greet";
 import {serve} from "./serve";
 
 const TOKEN = '1232754419:AAFGeEwzFanrU9RV4VR7nunDekRG9MvqZFY';

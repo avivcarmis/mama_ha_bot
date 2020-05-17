@@ -1,8 +1,8 @@
 import * as TelegramBot from "node-telegram-bot-api";
-import {readFromFile, readFromFileWithTuvia, responseText} from "./text";
+import {readFromFileWithTuvia, responseText} from "./text";
 import {rapeHandler} from "./rape";
 import {roastHandler} from "./roast";
-import {extractName} from "./members";
+import {extractMember} from "./members";
 
 type Handler = (bot: TelegramBot, msg: TelegramBot.Message)=> boolean;
 
@@ -15,17 +15,16 @@ const handlers: Array<Handler> = [
 
 const pending = new Set<number>();
 
-export function serve(bot: TelegramBot) {
-    const noHandlerReplies = readFromFile('no_handler_reply');
-    bot.on('message', msg => {
+export async function serve(bot: TelegramBot) {
+    bot.on('message', async msg => {
         if (!msg.from?.id) {
             return;
         }
         if (isCall(msg)) {
             pending.add(msg.from?.id);
-            const username = extractName(msg.from?.username || '');
-            const replies = readFromFileWithTuvia('reply', username);
-            bot.sendMessage(msg.chat.id, responseText(replies));
+            const member = extractMember(msg.from?.username || '');
+            const replies = await readFromFileWithTuvia('reply', member);
+            await bot.sendMessage(msg.chat.id, responseText(replies));
         } else if (pending.has(msg.from?.id)) {
             pending.delete(msg.from?.id);
             let handled = false;
@@ -35,7 +34,9 @@ export function serve(bot: TelegramBot) {
                 }
             }
             if (!handled) {
-                bot.sendMessage(msg.chat.id, responseText(noHandlerReplies));
+                const member = extractMember(msg.from?.username || '');
+                const noHandlerReplies = await readFromFileWithTuvia('no_handler_reply', member);
+                await bot.sendMessage(msg.chat.id, responseText(noHandlerReplies));
             }
         }
     });

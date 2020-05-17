@@ -1,27 +1,48 @@
-import {readFileSync} from 'fs';
+import {readFile} from 'fs';
 import {resolve} from 'path';
+import {Member} from "./members";
 
 const TUVIA = 'טוביה';
 
-export function readFromFile(path: string, replacements: {[key: string]: string} = {}): string[] {
+export async function readFromFile(path: string): Promise<string[]> {
     const file = resolve('assets', path + '.txt');
-    const result = readFileSync(file).toString().split('\n').map(s => s.trim()).filter(s => s);
-    for (let i = 0; i < result.length; i++) {
-        for (const key of Object.keys(replacements)) {
-            const value = replacements[key];
-            while (result[i].indexOf(key) > -1) {
-                result[i] = result[i].replace(key, value);
-            }
+    const buffer = await readFilePromise(file);
+    return buffer.toString().split('\n').map(s => s.trim()).filter(s => s);
+}
+
+export async function readFromFileWithTuvia(path: string, member: Member): Promise<string[]> {
+    const options = await readFromFile(`${path}_@${member.gender}`);
+    const result = [];
+    for (const option of options) {
+        for (const name of member.names) {
+            const value = replaceAll(option, TUVIA, name);
+            result.push(value);
         }
     }
     return result;
 }
 
-export function readFromFileWithTuvia(path: string, name: string): string[] {
-    return readFromFile(path, {[TUVIA]: name});
-}
-
 export function responseText(options: string[]): string {
     const index = Math.floor(Math.random() * options.length);
     return options[index];
+}
+
+function readFilePromise(path: string): Promise<Buffer> {
+    return new Promise((resolve,  reject) => {
+        readFile(path, (err, data) => {
+            if (err) {
+                reject(err);
+            } else {
+                resolve(data);
+            }
+        });
+    });
+}
+
+function replaceAll(v: string, toReplace: string, replaceWith: string): string {
+    let result = v;
+    while (result.indexOf(toReplace) > -1) {
+        result = result.replace(toReplace, replaceWith);
+    }
+    return result
 }

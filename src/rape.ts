@@ -1,6 +1,6 @@
 import * as TelegramBot from "node-telegram-bot-api";
 import {readFromFileWithTuvia, responseText} from "./text";
-import {extractName, extractUsername} from "./members";
+import {extractMember, extractUsername, Member} from "./members";
 
 const KEYWORD = 'תאנוס את';
 const DURATION = 1000 * 60 * 5;
@@ -12,17 +12,17 @@ export function rapeHandler(bot: TelegramBot, msg: TelegramBot.Message): boolean
     }
     const restOfMessage = value.substr(KEYWORD.length);
     const username = extractUsername(restOfMessage);
-    const name = extractName(restOfMessage);
-    if (!name) {
+    if (!username) {
         return false;
     }
-    rape(bot, username, name);
+    const member = extractMember(restOfMessage);
+    rape(bot, username, member);
     return true;
 }
 
-function rape(bot: TelegramBot, username: string, name: string) {
+async function rape(bot: TelegramBot, username: string, member: Member) {
     const end = Date.now() + DURATION;
-    const responses = readFromFileWithTuvia('rape', name);
+    const responses = await readFromFileWithTuvia('rape', member);
     bot.on('message', msg => {
         if (Date.now() >= end) {
             return;
