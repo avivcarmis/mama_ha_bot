@@ -10,6 +10,9 @@ const PEOPLE: {[key: string]: Member} = {
             'המאמא',
             'מאמאשלי',
             'המאמא הזאת',
+              'אדוה',
+              'אדווה',
+              'חדווים',
         ],
         gender: "female"
     },
@@ -19,6 +22,8 @@ const PEOPLE: {[key: string]: Member} = {
             'יקווווורר',
             'ישמיר',
             'יקוויר'
+              'יקיר',
+              'מקיורק',
         ],
         gender: "male"
     },
@@ -30,6 +35,7 @@ const PEOPLE: {[key: string]: Member} = {
             'קלמיר',
             'למיר בלי בצל',
             'הררי'
+              'ליאור',
         ],
         gender: "female"
     },
@@ -39,6 +45,8 @@ const PEOPLE: {[key: string]: Member} = {
             'משוד',
             'מתןןןןןןן',
             'משוש'
+              'מתן',
+              'מתוד',
         ],
         gender: "male"
     },
@@ -47,6 +55,9 @@ const PEOPLE: {[key: string]: Member} = {
             'איבוב',
             'אבוב',
             'אבבבייייייב'
+              'אביב',
+              'חביב',
+              'מאמא הבן',
         ],
         gender: "male"
     },
