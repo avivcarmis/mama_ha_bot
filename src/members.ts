@@ -1,3 +1,5 @@
+import * as TelegramBot from "node-telegram-bot-api";
+
 export type Member = {
     names: string[];
     gender: 'male' | 'female';
@@ -73,5 +75,18 @@ export function extractUsername(restOfMessage: string): string {
 
 export function extractMember(restOfMessage: string): Member {
     const username = extractUsername(restOfMessage);
-    return PEOPLE[username] || {names: [username], gender: "male"};
+    return PEOPLE[username] || memberByName(username) || {names: [username], gender: "male"};
+}
+
+function memberByName(name: string): Member | null {
+    for (const member of Object.values(PEOPLE)) {
+        if (member.names.indexOf(name) > -1) {
+            return member;
+        }
+    }
+    return null;
+}
+
+export function getMe(message: TelegramBot.Message): Member {
+    return message?.from?.username && PEOPLE[message?.from?.username] || {names: ['טוביה'], gender: "male"};
 }

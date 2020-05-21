@@ -3,6 +3,9 @@ import {readFromFileWithTuvia, responseText} from "./text";
 import {rapeHandler} from "./rape";
 import {roastHandler} from "./roast";
 import {extractMember} from "./members";
+import {liftHandler} from "./lift";
+import {eightBallHandler} from "./eight_ball";
+import {genericQuestionHandler} from "./am_i_right";
 
 type Handler = (bot: TelegramBot, msg: TelegramBot.Message)=> boolean;
 
@@ -10,7 +13,10 @@ const KEYWORD = 'בוט';
 
 const handlers: Array<Handler> = [
     rapeHandler,
-    roastHandler
+    roastHandler,
+    liftHandler,
+    eightBallHandler,
+    genericQuestionHandler
 ];
 
 const pending = new Set<number>();
@@ -20,19 +26,19 @@ export async function serve(bot: TelegramBot) {
         if (!msg.from?.id) {
             return;
         }
-        if (isCall(msg)) {
-            pending.add(msg.from?.id);
-            const member = extractMember(msg.from?.username || '');
-            const replies = await readFromFileWithTuvia('reply', member);
-            await bot.sendMessage(msg.chat.id, responseText(replies));
+        const rest = isCall(msg);
+        if (rest !== null) {
+            msg.text = rest;
+            const handled = tryToServe(bot, msg);
+            if (!handled) {
+                pending.add(msg.from?.id);
+                const member = extractMember(msg.from?.username || '');
+                const replies = await readFromFileWithTuvia('reply', member);
+                await bot.sendMessage(msg.chat.id, responseText(replies));
+            }
         } else if (pending.has(msg.from?.id)) {
             pending.delete(msg.from?.id);
-            let handled = false;
-            for (const handler of handlers) {
-                if (handler(bot, msg)) {
-                    handled = true;
-                }
-            }
+            const handled = tryToServe(bot, msg);
             if (!handled) {
                 const member = extractMember(msg.from?.username || '');
                 const noHandlerReplies = await readFromFileWithTuvia('no_handler_reply', member);
@@ -42,7 +48,19 @@ export async function serve(bot: TelegramBot) {
     });
 }
 
-function isCall(msg: TelegramBot.Message): boolean {
-    const value = msg.text?.trim().split(' ');
-    return value?.length === 1 && value[0].indexOf(KEYWORD) > -1;
+function isCall(msg: TelegramBot.Message): string | null {
+    const words = msg.text?.trim().split(' ')!;
+    if (words[0] && words[0].indexOf(KEYWORD) == 0) {
+        return words?.slice(1).join(' ').trim();
+    }
+    return null;
+}
+
+function tryToServe(bot: TelegramBot, msg: TelegramBot.Message): boolean {
+    for (const handler of handlers) {
+        if (handler(bot, msg)) {
+            return true;
+        }
+    }
+    return false;
 }
