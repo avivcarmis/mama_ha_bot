@@ -16,5 +16,5 @@ export function eightBallHandler(bot: TelegramBot, msg: TelegramBot.Message): bo
 
 async function eightBall(bot: TelegramBot, msg: TelegramBot.Message, sender: Member) {
     const replies = await readFromFileWithTuvia('eight_ball', sender);
-    bot.sendMessage(msg.chat.id, responseText(replies));
+    bot.sendMessage(msg.chat.id, responseText(replies), {reply_to_message_id: msg.message_id});
 }

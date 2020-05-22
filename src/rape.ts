@@ -28,7 +28,7 @@ async function rape(bot: TelegramBot, username: string, member: Member) {
             return;
         }
         if (msg.from?.username === username) {
-            bot.sendMessage(msg.chat.id, responseText(responses));
+            bot.sendMessage(msg.chat.id, responseText(responses), {reply_to_message_id: msg.message_id});
         }
     });
 }

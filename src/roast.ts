@@ -9,7 +9,7 @@ export function roastHandler(bot: TelegramBot, msg: TelegramBot.Message): boolea
     const value = msg.text?.trim();
     if (value?.indexOf(SELF_KEYWORD) == 0) {
         const member = getMe(msg);
-        roast(bot, msg, member);
+        roast(bot, msg.chat.id, member, false, msg.message_id);
         return true;
 
     }
@@ -18,14 +18,14 @@ export function roastHandler(bot: TelegramBot, msg: TelegramBot.Message): boolea
         if (!member) {
             return false;
         }
-        roast(bot, msg, member);
+        roast(bot, msg.chat.id, member, false, msg.message_id);
         return true;
 
     }
     return false;
 }
 
-async function roast(bot: TelegramBot, msg: TelegramBot.Message, member: Member) {
-    const roasts = await readFromFileWithTuvia('roast', member);
-    bot.sendMessage(msg.chat.id, responseText(roasts));
+export async function roast(bot: TelegramBot, chatId: number, member: Member, requireTuvia: boolean, replyMsgId?: number) {
+    const roasts = await readFromFileWithTuvia('roast', member, requireTuvia);
+    bot.sendMessage(chatId, responseText(roasts), {reply_to_message_id: replyMsgId});
 }

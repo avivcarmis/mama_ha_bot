@@ -10,10 +10,13 @@ export async function readFromFile(path: string): Promise<string[]> {
     return buffer.toString().split('\n').map(s => s.trim()).filter(s => s);
 }
 
-export async function readFromFileWithTuvia(path: string, member: Member): Promise<string[]> {
+export async function readFromFileWithTuvia(path: string, member: Member, requireTuvia = false): Promise<string[]> {
     const options = await readFromFile(`${path}_@${member.gender}`);
     const result = [];
     for (const option of options) {
+        if (requireTuvia && option.indexOf(TUVIA) == -1) {
+            continue;
+        }
         for (const name of member.names) {
             const value = replaceAll(option, TUVIA, name);
             result.push(value);

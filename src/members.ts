@@ -90,3 +90,9 @@ function memberByName(name: string): Member | null {
 export function getMe(message: TelegramBot.Message): Member {
     return message?.from?.username && PEOPLE[message?.from?.username] || {names: ['טוביה'], gender: "male"};
 }
+
+export function getRandomMember(): Member {
+    const options = Object.values(PEOPLE);
+    const index = Math.floor(Math.random() * options.length);
+    return options[index];
+}

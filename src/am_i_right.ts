@@ -20,5 +20,5 @@ export function genericQuestionHandler(bot: TelegramBot, msg: TelegramBot.Messag
 
 async function genericQuestion(bot: TelegramBot, msg: TelegramBot.Message, sender: Member) {
     const replies = await readFromFileWithTuvia('generic_question', sender);
-    bot.sendMessage(msg.chat.id, responseText(replies));
+    bot.sendMessage(msg.chat.id, responseText(replies), {reply_to_message_id: msg.message_id});
 }

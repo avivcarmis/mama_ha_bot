@@ -34,7 +34,7 @@ export async function serve(bot: TelegramBot) {
                 pending.add(msg.from?.id);
                 const member = extractMember(msg.from?.username || '');
                 const replies = await readFromFileWithTuvia('reply', member);
-                await bot.sendMessage(msg.chat.id, responseText(replies));
+                await bot.sendMessage(msg.chat.id, responseText(replies), {reply_to_message_id: msg.message_id});
             }
         } else if (pending.has(msg.from?.id)) {
             pending.delete(msg.from?.id);
@@ -42,7 +42,7 @@ export async function serve(bot: TelegramBot) {
             if (!handled) {
                 const member = extractMember(msg.from?.username || '');
                 const noHandlerReplies = await readFromFileWithTuvia('no_handler_reply', member);
-                await bot.sendMessage(msg.chat.id, responseText(noHandlerReplies));
+                await bot.sendMessage(msg.chat.id, responseText(noHandlerReplies), {reply_to_message_id: msg.message_id});
             }
         }
     });
