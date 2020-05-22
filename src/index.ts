@@ -11,5 +11,5 @@ const bot = new TelegramBot(TOKEN, {polling: true});
 
 greetNewMembers(bot, MY_ID);
 serve(bot);
-doStats(bot, -486855121);
+doStats(bot, -1001217422900);
 doRandomThings(bot, -1001217422900);
