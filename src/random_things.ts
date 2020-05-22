@@ -7,9 +7,9 @@ const TIMES_PER_DAY = 2.5;
 const START_HOUR_OF_DAY = 10;
 const END_HOUR_OF_DAY = 22;
 
-type randomThing = (bot: TelegramBot, chatId: number, member: Member, requireTuvia: boolean, replyMsgId?: number) => any;
+type RandomThing = (bot: TelegramBot, chatId: number, member: Member, requireTuvia: boolean, replyMsgId?: number) => any;
 
-const randomThings: Array<randomThing> = [
+const randomThings: Array<RandomThing> = [
     lift,
     roast
 ];

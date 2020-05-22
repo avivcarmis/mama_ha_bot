@@ -49,7 +49,10 @@ export async function serve(bot: TelegramBot) {
 }
 
 function isCall(msg: TelegramBot.Message): string | null {
-    const words = msg.text?.trim().split(' ')!;
+    if (!msg.text) {
+        return null;
+    }
+    const words = msg.text?.trim().split(' ');
     if (words[0] && words[0].indexOf(KEYWORD) == 0) {
         return words?.slice(1).join(' ').trim();
     }

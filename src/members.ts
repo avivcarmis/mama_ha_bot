@@ -78,6 +78,10 @@ export function extractMember(restOfMessage: string): Member {
     return PEOPLE[username] || memberByName(username) || {names: [username], gender: "male"};
 }
 
+export function getMember(username: string): Member {
+    return PEOPLE[username];
+}
+
 function memberByName(name: string): Member | null {
     for (const member of Object.values(PEOPLE)) {
         if (member.names.indexOf(name) > -1) {
@@ -95,4 +99,17 @@ export function getRandomMember(): Member {
     const options = Object.values(PEOPLE);
     const index = Math.floor(Math.random() * options.length);
     return options[index];
+}
+
+export function getRandomName(username: string): string {
+    const member = PEOPLE[username];
+    if (!member) {
+        return username;
+    }
+    const index = Math.floor(Math.random() * member.names.length);
+    return member.names[index];
+}
+
+export function getUsernames(): string[] {
+    return Object.keys(PEOPLE);
 }

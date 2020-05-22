@@ -1,3 +1,5 @@
 /node_modules/
 /.idea/
 /dist/
+/member_stats.db
+/bar.png
