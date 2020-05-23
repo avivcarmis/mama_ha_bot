@@ -29,7 +29,6 @@ async function handleMessage(collection: Collection<MemberStats>, chatId: number
     if (!username) {
         return;
     }
-    console.log(`handling msg from ${username}`);
     const words = msg.text?.trim().split(/\s/g).filter(Boolean).length;
     const chars = msg.text?.length;
     let doc = await collection.findOnd({username});
@@ -58,7 +57,10 @@ function registerSummary(bot: TelegramBot, chatId: number, collection: Collectio
         0,
         0
     );
-    const diff = (summaryTime as any) - (now as any);
+    let diff = (summaryTime as any) - (now as any);
+    if (diff < 0) {
+        diff += (1000 * 60 * 60 * 24);
+    }
     setTimeout(() => {
         doSummary(bot, chatId, collection);
         registerSummary(bot, chatId, collection);
@@ -80,9 +82,9 @@ async function doSummary(bot: TelegramBot, chatId: number, collection: Collectio
         const messages = await readFromFileWithTuvia('most_talk', member);
         await bot.sendMessage(chatId, responseText(messages));
         await bot.sendMessage(chatId, `${stats.messages} הודעות\n${stats.words} מילים\n${stats.chars} תווים`);
-        sendPieChart(bot ,chatId, Object.values(memberMap));
+        await sendPieChart(bot ,chatId, Object.values(memberMap));
     }
-    cleanData(collection);
+    await cleanData(collection);
 }
 
 async function buildMemberMap(collection: Collection<MemberStats>): Promise<{[username: string]: MemberStats}> {
