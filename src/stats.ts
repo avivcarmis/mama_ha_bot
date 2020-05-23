@@ -29,6 +29,7 @@ async function handleMessage(collection: Collection<MemberStats>, chatId: number
     if (!username) {
         return;
     }
+    console.log(`handling msg from ${username}`);
     const words = msg.text?.trim().split(/\s/g).filter(Boolean).length;
     const chars = msg.text?.length;
     let doc = await collection.findOnd({username});
