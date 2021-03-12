@@ -11,7 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "highcharts-export-server": "^2.0.28",
+    "highcharts-export-server": "^2.1.0",
     "nedb": "^1.8.0",
     "node-telegram-bot-api": "^0.50.0"
   },
